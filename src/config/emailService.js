@@ -166,7 +166,7 @@ export const sendPasswordResetEmail = async ({ toEmail, adminName, resetToken, f
  */
 export const sendAdminWelcomeEmail = async ({ toEmail, adminName, tempPassword, role }) => {
   const transporter = getTransporter();
-  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:4200';
+  const frontendUrl = process.env.FRONTEND_URL || 'https://www.daposh.com';
   const adminUrl = `${frontendUrl}/admin`;
   const sender = process.env.EMAIL_FROM || `"Daposh Fashion Atelier" <${process.env.EMAIL_USER || 'anand8126137013@gmail.com'}>`;
 

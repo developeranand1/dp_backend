@@ -158,14 +158,8 @@ router.post('/forgot-password', async (req, res) => {
     admin.resetPasswordExpires = tokenExpiry;
     await admin.save();
 
-    // Determine target frontend URL dynamically
-    const reqOrigin = (req.headers.origin || req.headers.referer || '').toLowerCase();
-    let frontendBase = process.env.FRONTEND_URL || 'https://www.daposh.com';
-    if (reqOrigin.includes('localhost') || reqOrigin.includes('127.0.0.1')) {
-      frontendBase = 'http://localhost:4200';
-    } else if (reqOrigin.includes('daposh.com')) {
-      frontendBase = 'https://www.daposh.com';
-    }
+    // Target production frontend URL
+    const frontendBase = process.env.FRONTEND_URL || 'https://www.daposh.com';
 
     // Send email via Nodemailer
     try {
