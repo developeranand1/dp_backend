@@ -25,12 +25,43 @@ const productSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-    enum: ['Women', 'Men', 'Atelier Studio', 'Accessories', 'Footwear'],
-    default: 'Women'
+    default: 'Men' // 'Men', 'Topwear', 'Bottomwear', 'Ethnic and Festive', 'Co-ord Sets', 'Activewear', 'Winterwear', 'Innerwear and Loungewear', 'Footwear', 'Accessories', 'Women', 'Atelier Studio'
   },
   subCategory: {
     type: String,
-    default: 'Ready-to-Wear'
+    default: 'T-shirts'
+  },
+  subType: {
+    type: String,
+    default: ''
+  },
+  fit: {
+    type: String,
+    default: '' // slim, regular, relaxed, oversized, baggy
+  },
+  fabric: {
+    type: String,
+    default: '' // cotton, linen, polyester, denim, fleece, rayon, terry, corduroy
+  },
+  neck: {
+    type: String,
+    default: '' // round, V, polo, mandarin, spread collar
+  },
+  sleeve: {
+    type: String,
+    default: '' // full, half, sleeveless, roll-up
+  },
+  pattern: {
+    type: String,
+    default: '' // solid, stripes, checks, printed, graphic, embroidered
+  },
+  occasion: {
+    type: String,
+    default: '' // casual, formal, party, festive, gym, travel, loungewear
+  },
+  season: {
+    type: String,
+    default: '' // summer, winter, all-season
   },
   mood: {
     type: String,

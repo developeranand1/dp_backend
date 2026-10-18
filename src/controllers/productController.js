@@ -347,6 +347,14 @@ export const createProduct = async (req, res) => {
       subtitle: body.subtitle || 'Daposh Atelier Runway Drop',
       category: body.category,
       subCategory: body.subCategory || 'Ready-to-Wear',
+      subType: body.subType || '',
+      fit: body.fit || '',
+      fabric: body.fabric || '',
+      neck: body.neck || '',
+      sleeve: body.sleeve || '',
+      pattern: body.pattern || '',
+      occasion: body.occasion || '',
+      season: body.season || '',
       mood: body.mood || 'Minimalist Noir',
       price: Number(body.price),
       originalPrice: Number(body.originalPrice || body.price),
@@ -468,11 +476,18 @@ export const deleteProduct = async (req, res) => {
 export const getCategories = async (req, res) => {
   try {
     const defaultCategories = [
+      { name: 'Topwear', slug: 'topwear', count: 24, description: 'T-shirts, shirts, sweatshirts, sweaters, jackets, blazers & suits' },
+      { name: 'Bottomwear', slug: 'bottomwear', count: 18, description: 'Jeans, trousers, cargos, joggers, track pants & shorts' },
+      { name: 'Ethnic and Festive', slug: 'ethnic-and-festive', count: 16, description: 'Kurtas, sherwanis, kurta-pyjama sets & Nehru jackets' },
+      { name: 'Co-ord Sets', slug: 'co-ord-sets', count: 10, description: 'T-shirt + shorts, shirt + trousers, tracksuits & linen sets' },
+      { name: 'Activewear', slug: 'activewear', count: 12, description: 'Gym tees, dry-fit tops, sports shorts & compression wear' },
+      { name: 'Winterwear', slug: 'winterwear', count: 14, description: 'Hoodies, sweaters, jackets, thermals, mufflers & beanies' },
+      { name: 'Innerwear and Loungewear', slug: 'innerwear-and-loungewear', count: 15, description: 'Briefs, trunks, boxers, vests & night suits' },
+      { name: 'Footwear', slug: 'footwear', count: 12, description: 'Sneakers, sports shoes, loafers, formal shoes & mojaris' },
+      { name: 'Accessories', slug: 'accessories', count: 20, description: 'Belts, wallets, caps, sunglasses, watches & ties' },
       { name: 'Women', slug: 'women', count: 18, description: 'Haute couture gowns, silk blouses, blazers & bespoke sets' },
-      { name: 'Men', slug: 'men', count: 12, description: 'Sartorial tailoring, Italian suits, overcoats & shirts' },
-      { name: 'Atelier Studio', slug: 'atelier-studio', count: 8, description: 'Limited runway archival and numbered pieces' },
-      { name: 'Accessories', slug: 'accessories', count: 14, description: 'Full-grain calfskin bags, silk scarves & jewelry' },
-      { name: 'Footwear', slug: 'footwear', count: 9, description: 'Artisan handcrafted leather loafers, mules & boots' }
+      { name: 'Men', slug: 'men', count: 25, description: 'Sartorial tailoring, Italian suits, overcoats & shirts' },
+      { name: 'Atelier Studio', slug: 'atelier-studio', count: 8, description: 'Limited runway archival and numbered pieces' }
     ];
 
     return res.json({
