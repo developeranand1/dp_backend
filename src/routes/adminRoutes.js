@@ -122,15 +122,20 @@ router.post('/forgot-password', async (req, res) => {
     }
 
     const normalizedEmail = email.trim().toLowerCase();
-    const configuredEmail = (process.env.ADMIN_EMAIL || 'anand8126137013@gmail.com').toLowerCase().trim();
+    const knownEmails = [
+      (process.env.ADMIN_EMAIL || '').toLowerCase().trim(),
+      (process.env.EMAIL_USER || '').toLowerCase().trim(),
+      'anand8126137013@gmail.com',
+      'daposhfashion1@gmail.com'
+    ].filter(Boolean);
 
     let admin = await Admin.findOne({ email: normalizedEmail });
 
-    // If matches configured admin but doc doesn't exist yet, seed it
-    if (!admin && normalizedEmail === configuredEmail) {
+    // If matches any known admin email but doc doesn't exist yet, seed it
+    if (!admin && knownEmails.includes(normalizedEmail)) {
       admin = new Admin({
-        name: 'Daposh Founder & Super Admin',
-        email: configuredEmail,
+        name: normalizedEmail.includes('anand') ? 'Anand (Super Admin)' : 'Daposh Founder & Super Admin',
+        email: normalizedEmail,
         password: process.env.ADMIN_PASSWORD || 'admin123',
         role: 'SUPER_ADMIN',
         phone: '70280 14412'
@@ -153,12 +158,22 @@ router.post('/forgot-password', async (req, res) => {
     admin.resetPasswordExpires = tokenExpiry;
     await admin.save();
 
+    // Determine target frontend URL dynamically
+    const reqOrigin = (req.headers.origin || req.headers.referer || '').toLowerCase();
+    let frontendBase = process.env.FRONTEND_URL || 'https://www.daposh.com';
+    if (reqOrigin.includes('localhost') || reqOrigin.includes('127.0.0.1')) {
+      frontendBase = 'http://localhost:4200';
+    } else if (reqOrigin.includes('daposh.com')) {
+      frontendBase = 'https://www.daposh.com';
+    }
+
     // Send email via Nodemailer
     try {
       const emailResult = await sendPasswordResetEmail({
         toEmail: admin.email,
         adminName: admin.name,
-        resetToken
+        resetToken,
+        frontendBase
       });
 
       return res.json({
@@ -169,8 +184,7 @@ router.post('/forgot-password', async (req, res) => {
       });
     } catch (emailErr) {
       console.error('Nodemailer Send Error:', emailErr);
-      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:4200';
-      const fallbackResetUrl = `${frontendUrl}/admin?action=reset-password&token=${resetToken}`;
+      const fallbackResetUrl = `${frontendBase}/admin?action=reset-password&token=${resetToken}`;
       
       return res.status(500).json({
         success: false,

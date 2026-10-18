@@ -75,22 +75,31 @@ export const Admin = mongoose.model('Admin', adminSchema);
  */
 export const ensureInitialAdmin = async () => {
   try {
-    const configuredEmail = (process.env.ADMIN_EMAIL || 'anand8126137013@gmail.com').toLowerCase().trim();
-    const existing = await Admin.findOne({ email: configuredEmail });
+    const emailsToSeed = [
+      (process.env.ADMIN_EMAIL || 'daposhfashion1@gmail.com').toLowerCase().trim(),
+      (process.env.EMAIL_USER || 'anand8126137013@gmail.com').toLowerCase().trim(),
+      'anand8126137013@gmail.com',
+      'daposhfashion1@gmail.com'
+    ];
 
-    if (!existing) {
-      const initialPassword = process.env.ADMIN_PASSWORD || 'admin123';
-      const superAdmin = new Admin({
-        name: 'Daposh Founder & Super Admin',
-        email: configuredEmail,
-        password: initialPassword,
-        role: 'SUPER_ADMIN',
-        phone: '70280 14412'
-      });
-      await superAdmin.save();
-      console.log(`👑 Initial Super Admin established for: ${configuredEmail}`);
-    } else {
-      console.log(`✓ Super Admin present in DB: ${configuredEmail}`);
+    const uniqueEmails = [...new Set(emailsToSeed)].filter(Boolean);
+
+    for (const email of uniqueEmails) {
+      const existing = await Admin.findOne({ email });
+      if (!existing) {
+        const initialPassword = process.env.ADMIN_PASSWORD || 'admin123';
+        const superAdmin = new Admin({
+          name: email.includes('anand') ? 'Anand (Super Admin)' : 'Daposh Founder & Super Admin',
+          email,
+          password: initialPassword,
+          role: 'SUPER_ADMIN',
+          phone: '70280 14412'
+        });
+        await superAdmin.save();
+        console.log(`👑 Super Admin initialized for: ${email}`);
+      } else {
+        console.log(`✓ Super Admin present in DB: ${email}`);
+      }
     }
   } catch (err) {
     console.warn(`⚠️ Warning initializing admin: ${err.message}`);

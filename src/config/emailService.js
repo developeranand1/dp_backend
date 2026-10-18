@@ -136,9 +136,9 @@ export const getPasswordResetEmailTemplate = ({ adminName, resetUrl, expireMinut
 /**
  * Send Password Reset Email to Admin
  */
-export const sendPasswordResetEmail = async ({ toEmail, adminName, resetToken }) => {
+export const sendPasswordResetEmail = async ({ toEmail, adminName, resetToken, frontendBase }) => {
   const transporter = getTransporter();
-  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:4200';
+  const frontendUrl = frontendBase || process.env.FRONTEND_URL || 'https://www.daposh.com';
   const resetUrl = `${frontendUrl}/admin?action=reset-password&token=${resetToken}`;
   const sender = process.env.EMAIL_FROM || `"Daposh Fashion Atelier" <${process.env.EMAIL_USER || 'anand8126137013@gmail.com'}>`;
 
