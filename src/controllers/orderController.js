@@ -257,7 +257,7 @@ export const trackOrder = async (req, res) => {
           orderId: cleanQuery.toUpperCase(),
           customer: {
             name: 'Atelier Client',
-            phone: '+91 85955 72121',
+            phone: '+91 70280 14412',
             email: 'client@daposhfashion.com',
             address: 'D85 shop no 6, Main road, Malviya nagar',
             city: 'New delhi',

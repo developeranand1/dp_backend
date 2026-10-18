@@ -11,6 +11,7 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import { connectDB } from './config/db.js';
+import { ensureInitialAdmin } from './models/Admin.js';
 import productRoutes from './routes/productRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import uploadRoutes from './routes/uploadRoutes.js';
@@ -20,8 +21,12 @@ import inquiryRoutes from './routes/inquiryRoutes.js';
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-// Connect to MongoDB
-connectDB();
+// Connect to MongoDB & Seed Initial Super Admin
+connectDB().then((connected) => {
+  if (connected) {
+    ensureInitialAdmin();
+  }
+});
 
 // Middlewares
 app.use(cors({
