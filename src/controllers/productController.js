@@ -422,8 +422,13 @@ export const updateProduct = async (req, res) => {
     const { id } = req.params;
     const body = req.body;
 
+    // Sanitize update data to prevent MongoDB immutable _id error
+    const { _id, id: prodId, createdAt, updatedAt, __v, ...updateData } = body;
+    if (updateData.price !== undefined) updateData.price = Number(updateData.price);
+    if (updateData.originalPrice !== undefined) updateData.originalPrice = Number(updateData.originalPrice);
+
     if (isDbConnected() && mongoose.Types.ObjectId.isValid(id)) {
-      const updated = await Product.findByIdAndUpdate(id, body, { new: true, runValidators: true });
+      const updated = await Product.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
       if (updated) {
         return res.json({ success: true, message: 'Product updated successfully', data: updated });
       }
@@ -431,7 +436,7 @@ export const updateProduct = async (req, res) => {
 
     const index = fallbackProducts.findIndex(p => p.id === id || p._id === id);
     if (index > -1) {
-      fallbackProducts[index] = { ...fallbackProducts[index], ...body };
+      fallbackProducts[index] = { ...fallbackProducts[index], ...updateData };
       return res.json({
         success: true,
         message: 'Product updated successfully',
